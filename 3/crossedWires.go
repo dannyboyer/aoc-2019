@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"strconv"
 	"strings"
 )
@@ -14,24 +13,15 @@ type Location struct {
 
 // CodeToInstruction converts a string to x, y delta
 func CodeToInstruction(code string) Location {
-	// man strings are low level in Go...
-
 	direction := rune(code[0])
-	value, err := strconv.Atoi(string(code[1]))
-	if err != nil {
-		log.Fatal(err)
-	}
+	value, _ := strconv.Atoi(string(code[1]))
 
-	if direction == 'R' {
-		return Location{value, 0}
-	} else if direction == 'L' {
-		return Location{-value, 0}
-	} else if direction == 'U' {
-		return Location{0, value}
-	} else if direction == 'D' {
-		return Location{0, -value}
-	} else {
-		return Location{0, 0}
+	switch direction {
+	case 'R': return Location{value, 0}
+	case 'L': return Location{-value, 0}
+	case 'U': return Location{0, value}
+	case 'D': return Location{0, -value}
+	default: return Location{0, 0}
 	}
 }
 
