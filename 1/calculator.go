@@ -2,41 +2,41 @@ package main
 
 import (
 	"bufio"
-	"fmt"
-	"log"
 	"math"
 	"os"
 	"strconv"
+	"fmt"
 )
 
-func compute(mass float64) float64 {
+func calcFuelReqWithoutMass(mass float64) float64 {
 	return math.Floor(mass/3) - 2
 }
 
-func computeRec(mass float64) float64 {
+func calcFuelReq(mass float64) float64 {
 	fuel := math.Floor(mass/3) - 2
 	if fuel <= 0 {
 		return 0
 	}
-	return fuel + computeRec(fuel)
+	return fuel + calcFuelReq(fuel)
+}
+
+func getAnswer2(massList []float64) float64 {
+	sum := 0.0
+	for _, mass := range massList {
+		sum += calcFuelReq(mass)
+	}
+	return sum
 }
 
 func main() {
-	file, err := os.Open(os.Args[1])
-	if err != nil {
-		log.Fatal(err)
-	}
-
+	file, _ := os.Open(os.Args[1])
 	defer file.Close()
-	scanner := bufio.NewScanner(file)
-	sum := 0.0
+	scanner := bufio.NewScanner(file)	
+	var massList []float64
 	for scanner.Scan() {
-		mass, err := strconv.ParseFloat(scanner.Text(), 64)
-		if err != nil {
-			log.Fatal(err)
-		}
-		sum += computeRec(mass)
+		mass, _ := strconv.ParseFloat(scanner.Text(), 64)
+		massList = append(massList, mass)
 	}
 
-	fmt.Println(sum)
+	fmt.Println(getAnswer2(massList))	
 }
